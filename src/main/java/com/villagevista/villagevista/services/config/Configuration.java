@@ -11,7 +11,7 @@ public class Configuration {
     public static final String DATABASE_DRIVER="com.mysql.cj.jdbc.Driver";
     public static final String SERVER_TIMEZONE= Calendar.getInstance().getTimeZone().getID();
 
-    public static final String DATABASE_URL="jdbc:mysql://villagevista-andreadelfatto-a5e9.f.aivencloud.com:21300/defaultdb?user=avnadmin&password=AVNS_cBodN9VpSMTr_p4_VCO&sslMode=REQUIRED&serverTimezone=" + SERVER_TIMEZONE;
+    public static final String DATABASE_URL="jdbc:mysql://villagevista-andreadelfatto-a5e9.f.aivencloud.com:21300/villaggio?user=avnadmin&password=AVNS_cBodN9VpSMTr_p4_VCO&sslMode=REQUIRED&serverTimezone=" + SERVER_TIMEZONE;
     /* Session Configuration */
     public static final String COOKIE_IMPL=DAOFactory.COOKIEIMPL;
 
