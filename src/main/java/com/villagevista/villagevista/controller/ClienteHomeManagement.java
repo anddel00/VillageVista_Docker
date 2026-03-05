@@ -366,10 +366,12 @@ public class ClienteHomeManagement {
             // Inoltra la richiesta alla vista per mostrare i risultati
 
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Si è verificato un errore durante la ricerca della disponibilità.");
+        e.printStackTrace();
+        // Reindirizziamo l'utente alla home con un messaggio di errore invece di restituire null
+        request.setAttribute("error", "Errore tecnico: " + e.getMessage());
+        request.setAttribute("viewUrl", "clienteHome/clienteHome");
 
     }
-    }
 
+    }
 }

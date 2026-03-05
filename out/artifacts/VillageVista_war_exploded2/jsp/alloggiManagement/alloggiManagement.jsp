@@ -10,233 +10,355 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Gestione Alloggi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Alloggi | VillageVista Staff</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
     <style>
+        /* --- 1. CSS VARIABLES (Design System) --- */
+        :root {
+            --primary: #1e3a8a;
+            --primary-hover: #1e40af;
+            --sidebar-bg: #0f172a;
+            --bg-light: #f8fafc;
+            --text-dark: #334155;
+            --text-muted: #64748b;
+            --font-headings: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+
+            /* Colori per azioni e stati */
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --success: #10b981;
+            --success-hover: #059669;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: "Cactus Classical Serif", serif;
-            margin: 0;
-            padding: 0;
-            color: #ffca00;
-        }
-        .page-title{
-            color: #0066da;
-            font-family: "Cactus Classical Serif",serif;
+            font-family: var(--font-body);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .home-button img {
-            vertical-align: middle;
-            position: relative;
-            width: 40px;
-            height: 40px;
-        }
-
-        /* Stili per la sidebar */
-        .sidebar {
+        /* --- 2. MOBILE HEADER --- */
+        .mobile-header {
+            display: none;
+            background-color: var(--sidebar-bg);
+            color: white;
+            padding: 15px 20px;
+            justify-content: space-between;
+            align-items: center;
             position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 200px;
-            background-color: #007bff;
-            padding-top: 20px;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .hamburger {
+            background: none; border: none; color: white;
+            font-size: 24px; cursor: pointer;
+        }
+
+        /* --- 3. SIDEBAR --- */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            position: fixed;
+            top: 0; bottom: 0; left: 0;
             overflow-y: auto;
-            color: white;
+            transition: transform 0.3s ease;
+            z-index: 999;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
         }
 
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-            color: white;
+        .sidebar-brand {
+            padding: 25px 20px;
+            font-family: var(--font-headings);
+            font-size: 22px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #fbbf24;
+            text-align: center;
         }
 
-        .sidebar ul li {
-            margin-bottom: 10px;
-            color: white;
-        }
-        .sidebar li:nth-child(3){
-            background-color: #0066da;
-        }
+        .sidebar ul { list-style: none; padding-top: 20px; }
+        .sidebar li { margin-bottom: 5px; }
 
         .nav-link {
-            display: block;
-            padding: 10px 20px;
+            display: flex; align-items: center;
+            padding: 12px 20px;
+            color: #cbd5e1;
             text-decoration: none;
-            color: #333;
-            transition: background-color 0.3s;
+            transition: all 0.2s ease;
+            font-weight: 600;
         }
-
-        .nav-link:hover {
-            background-color: #0066da;
-        }
-
-        .nav-icon {
-            vertical-align: middle;
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-        }
-
-        .nav-text {
-            vertical-align: middle;
+        .nav-link:hover, .sidebar li.active .nav-link {
+            background-color: rgba(255,255,255,0.1);
             color: white;
+            border-left: 4px solid var(--warning);
         }
 
+        .nav-icon { width: 20px; height: 20px; margin-right: 15px; opacity: 0.8; filter: brightness(0) invert(1); }
+        .nav-link:hover .nav-icon, .sidebar li.active .nav-icon { opacity: 1; }
 
+        /* --- 4. MAIN CONTENT & TABLE --- */
         .content {
-            margin-left: 220px;
-            padding: 20px;
-            font-family: "Cactus Classical Serif",serif;
+            margin-left: 250px;
+            padding: 40px;
+            flex-grow: 1;
+            width: calc(100% - 250px);
+            transition: margin-left 0.3s, width 0.3s;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            color: var(--primary);
+            font-family: var(--font-headings);
+            font-size: 32px;
+        }
+
+        /* Container per rendere la tabella scrollabile su mobile */
+        .table-responsive {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow-x: auto; /* Permette lo scroll orizzontale */
+            width: 100%;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #ccc;
+            min-width: 700px; /* Forza una larghezza minima per evitare schiacciamenti */
         }
 
         th, td {
-            padding: 10px;
+            padding: 15px 20px;
             text-align: left;
-            color: #0066da;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         th {
-            background-color: #007bff;
-            color: white;
-        }
-        th:nth-child(4){
-            background-color: #93def5;
-            color: black;
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .action-button {
-            background-color: #007bff;
-            color: white;
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        td {
+            color: var(--text-dark);
+            font-size: 15px;
+            vertical-align: middle;
+        }
+
+        /* --- 5. BADGES & BOTTONI --- */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .badge-blocked { background-color: #fee2e2; color: var(--danger); }
+        .badge-free { background-color: #d1fae5; color: var(--success); }
+
+        .action-cell form {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
             border: none;
-            padding: 5px 10px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
             cursor: pointer;
-            border-radius: 5px;
+            transition: background-color 0.2s, transform 0.1s;
+            font-family: var(--font-body);
         }
 
-        .action-button:hover {
-            background-color: #0056b3;
-        }
+        .btn-action:active { transform: scale(0.95); }
 
-        .block-button {
-            background-color: #dc3545;
-        }
-        .block-button:hover{
-            background-color: #af0b19;
-        }
+        .btn-edit { background-color: var(--primary); }
+        .btn-edit:hover { background-color: var(--primary-hover); }
 
-        .free-button {
-            background-color: #28a745;
-        }
-        .free-button:hover{
-            background-color: #0c8629;
+        .btn-block { background-color: var(--danger); }
+        .btn-block:hover { background-color: var(--danger-hover); }
+
+        .btn-free { background-color: var(--success); }
+        .btn-free:hover { background-color: var(--success-hover); }
+
+        /* --- 6. MEDIA QUERIES --- */
+        @media (max-width: 992px) {
+            .mobile-header { display: flex; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .content {
+                margin-left: 0; width: 100%; padding: 20px; padding-top: 80px;
+            }
         }
     </style>
 </head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
 <body>
-<div class="sidebar">
+
+<div class="mobile-header">
+    <div style="font-family: var(--font-headings); font-size: 20px; color: #fbbf24;">VillageVista</div>
+    <button class="hamburger" id="hamburgerBtn">☰</button>
+</div>
+
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand">VillageVista Staff</div>
     <ul>
         <li>
             <a href="Dispatcher?controllerAction=HomeManagement.view" class="nav-link">
-                <img src="images/homeb.png" alt="Home" class="nav-icon">
-                <span class="nav-text">Home</span>
+                <img src="images/homeb.png" alt="" class="nav-icon" onerror="this.style.display='none'">
+                Sito Pubblico
             </a>
         </li>
         <li>
             <a href="Dispatcher?controllerAction=AdminHomeManagement.view" class="nav-link">
-                <img src="images/calendario.png" alt="Prenotazioni" class="nav-icon">
-                <span class="nav-text">Prenotazioni</span>
+                <img src="images/calendario.png" alt="" class="nav-icon" onerror="this.style.display='none'">
+                Prenotazioni
             </a>
         </li>
-        <li>
+        <li class="active">
             <a href="Dispatcher?controllerAction=AdminHomeManagement.goToAlloggiManagement" class="nav-link">
-                <img src="images/alloggiob.png" alt="Alloggio" class="nav-icon">
-                <span class="nav-text">Alloggi</span>
+                <img src="images/alloggiob.png" alt="" class="nav-icon" onerror="this.style.display='none'">
+                Gestione Alloggi
             </a>
         </li>
         <li>
             <a href="Dispatcher?controllerAction=AdminHomeManagement.goToDipendentiManagement" class="nav-link">
-                <img src="images/dipendentib.png" alt="Dipendenti" class="nav-icon">
-                <span class="nav-text">Dipendenti</span>
+                <img src="images/dipendentib.png" alt="" class="nav-icon" onerror="this.style.display='none'">
+                Dipendenti
             </a>
         </li>
         <li>
             <a href="Dispatcher?controllerAction=AdminHomeManagement.goToAdminManagement" class="nav-link">
-                <img src="images/admin.png" alt="Clienti" class="nav-icon">
-                <span class="nav-text">Amministratori</span>
+                <img src="images/admin.png" alt="" class="nav-icon" onerror="this.style.display='none'">
+                Amministratori
             </a>
         </li>
         <li>
             <a href="Dispatcher?controllerAction=AdminHomeManagement.goToTurniManagement" class="nav-link">
-                <img src="images/turnib.png" alt="Turni" class="nav-icon">
-                <span class="nav-text">Turni</span>
+                <img src="images/turnib.png" alt="" class="nav-icon" onerror="this.style.display='none'">
+                Turni di Lavoro
             </a>
         </li>
         <li>
             <a href="Dispatcher?controllerAction=AdminHomeManagement.goToClientiManagement" class="nav-link">
-                <img src="images/personeb.png" alt="Clienti" class="nav-icon">
-                <span class="nav-text">Clienti</span>
+                <img src="images/personeb.png" alt="" class="nav-icon" onerror="this.style.display='none'">
+                Clienti
             </a>
         </li>
     </ul>
 </div>
-<div class="content">
-    <h1 class="page-title">Gestione Alloggi</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>Numero</th>
-            <th>Tipologia</th>
-            <th>Capienza</th>
-            <th>Prezzo per notte</th>
-            <th>BLOCCATO</th>
-            <th>Azioni</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% for (Alloggio alloggio : alloggi) { %>
-        <tr>
-            <td><%= alloggio.getNum_alloggio() %></td>
-            <td><%= alloggio.getTipo() %></td>
-            <td><%= alloggio.getCapienza() %></td>
-            <td><%= alloggio.getPrezzonotte()%> €</td>
-            <td><%= alloggio.getOccupato() %></td>
-            <td>
-                <form action="Dispatcher" method="post" style="display:inline;">
-                    <input type="hidden" name="controllerAction" value="AdminHomeManagement.goToModAlloggio">
-                    <input type="hidden" name="num_alloggio" value="<%= alloggio.getNum_alloggio() %>">
-                    <button type="submit" class="action-button">Modifica</button>
-                </form>
-                <% if ("NO".equals(alloggio.getOccupato())) { %>
-                <form action="Dispatcher" method="post" style="display:inline;">
-                    <input type="hidden" name="controllerAction" value="AdminHomeManagement.occupaAlloggio">
-                    <input type="hidden" name="num_alloggio" value="<%= alloggio.getNum_alloggio() %>">
-                    <button type="submit" class="action-button block-button">Blocca</button>
-                </form>
-                <% } else if ("SI".equals(alloggio.getOccupato())) { %>
-                <form action="Dispatcher" method="post" style="display:inline;">
-                    <input type="hidden" name="controllerAction" value="AdminHomeManagement.liberaAlloggio">
-                    <input type="hidden" name="num_alloggio" value="<%= alloggio.getNum_alloggio() %>">
-                    <button type="submit" class="action-button free-button">Libera</button>
-                </form>
-                <% } %>
-            </td>
-        </tr>
-        <% } %>
-        </tbody>
-    </table>
+
+<div class="content" id="main-content">
+    <div class="page-header">
+        <h1 class="page-title">Gestione Alloggi</h1>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+            <tr>
+                <th>N° Alloggio</th>
+                <th>Tipologia</th>
+                <th>Capienza</th>
+                <th>Prezzo Notte</th>
+                <th>Stato</th>
+                <th>Azioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for (Alloggio alloggio : alloggi) { %>
+            <tr>
+                <td><strong>#<%= alloggio.getNum_alloggio() %></strong></td>
+                <td><%= alloggio.getTipo() %></td>
+                <td><%= alloggio.getCapienza() %> Persone</td>
+                <td><strong>€ <%= alloggio.getPrezzonotte()%></strong></td>
+
+                <td>
+                    <% if ("SI".equals(alloggio.getOccupato())) { %>
+                    <span class="badge badge-blocked">Bloccato</span>
+                    <% } else { %>
+                    <span class="badge badge-free">Libero</span>
+                    <% } %>
+                </td>
+
+                <td class="action-cell">
+                    <form action="Dispatcher" method="post">
+                        <input type="hidden" name="controllerAction" value="AdminHomeManagement.goToModAlloggio">
+                        <input type="hidden" name="num_alloggio" value="<%= alloggio.getNum_alloggio() %>">
+                        <button type="submit" class="btn-action btn-edit">Modifica</button>
+                    </form>
+
+                    <% if ("NO".equals(alloggio.getOccupato())) { %>
+                    <form action="Dispatcher" method="post">
+                        <input type="hidden" name="controllerAction" value="AdminHomeManagement.occupaAlloggio">
+                        <input type="hidden" name="num_alloggio" value="<%= alloggio.getNum_alloggio() %>">
+                        <button type="submit" class="btn-action btn-block">Blocca</button>
+                    </form>
+                    <% } else if ("SI".equals(alloggio.getOccupato())) { %>
+                    <form action="Dispatcher" method="post">
+                        <input type="hidden" name="controllerAction" value="AdminHomeManagement.liberaAlloggio">
+                        <input type="hidden" name="num_alloggio" value="<%= alloggio.getNum_alloggio() %>">
+                        <button type="submit" class="btn-action btn-free">Sblocca</button>
+                    </form>
+                    <% } %>
+                </td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // --- LOGICA MENU HAMBURGER MOBILE ---
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        hamburgerBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+        });
+
+        // Chiudi sidebar se clicco fuori su mobile
+        document.addEventListener('click', function(e) {
+            if(window.innerWidth <= 992 && !sidebar.contains(e.target) && e.target !== hamburgerBtn) {
+                sidebar.classList.remove('open');
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

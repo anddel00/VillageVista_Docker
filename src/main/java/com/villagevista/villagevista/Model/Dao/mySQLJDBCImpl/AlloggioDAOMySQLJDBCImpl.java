@@ -247,7 +247,7 @@ public class AlloggioDAOMySQLJDBCImpl implements AlloggioDAO {
             String sql = "SELECT * FROM ALLOGGIO " +
                     "WHERE NUM_ALLOGGIO NOT IN (" +
                     "    SELECT NUM_ALLOGGIO " +
-                    "    FROM PRENOTAZIONE " +
+                    "    FROM prenotazione " +
                     "    WHERE " +
                     "       ( (data_checkin BETWEEN ? AND ?) " +
                     "        OR " +

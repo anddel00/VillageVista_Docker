@@ -1,294 +1,375 @@
 <%@ page import="java.sql.Date" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Pagamento</title>
-    <!-- Includi qui eventuali stili CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: "Cactus Classical Serif", serif;
-        }
-        .mb-4{
-            font-family: "Cactus Classical Serif", sans-serif;
-            margin-top: 40px;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conferma Prenotazione | VillageVista</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. CSS VARIABLES --- */
+        :root {
+            --primary: #1e3a8a;
+            --primary-hover: #172554;
+            --accent: #d97706;
+            --accent-hover: #b45309;
+            --bg-page: #f1f5f9;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --font-headings: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --success: #10b981;
         }
-        .container {
-            width: 80%;
-            margin: auto;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- HEADER --- */
+        .page-header {
+            background-color: var(--primary);
+            padding: 20px 5%;
             text-align: center;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .alloggio-details {
+        .logo-img { height: 50px; border-radius: 8px; }
+
+        /* --- MAIN LAYOUT --- */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr; /* Due colonne: Sinistra riepilogo, Destra Pagamento */
+            gap: 40px;
+            align-items: start;
+        }
+
+        .title-main {
+            font-family: var(--font-headings);
+            font-size: 32px;
+            color: var(--primary);
             margin-bottom: 30px;
+            grid-column: 1 / -1;
+            text-align: center;
         }
-        .immagineAlloggio img {
-            max-width: 100%;
-            height: auto;
+
+        /* --- RIEPILOGO ALLOGGIO (Colonna Sx) --- */
+        .summary-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-img { width: 100%; height: 250px; object-fit: cover; display: block; }
+
+        .summary-content { padding: 30px; }
+        .summary-title { font-family: var(--font-headings); font-size: 24px; color: var(--primary); margin-bottom: 20px; }
+
+        .summary-list { list-style: none; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 20px;}
+        .summary-list li { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: 600; color: var(--text-dark);}
+        .summary-list img { width: 20px; height: 20px; opacity: 0.7;}
+
+        .features-list { list-style: none; color: #166534; font-size: 14px; font-weight: 600; margin-bottom: 20px;}
+        .features-list li { display: flex; align-items: center; gap: 8px; margin-bottom: 8px;}
+        .features-list img { width: 16px;}
+
+        .total-price-box {
+            background: #fdfcf6;
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 40px;
+            border: 1px dashed var(--accent);
+            text-align: center;
         }
-        .dettagli-container {
+        .total-label { display: block; font-size: 14px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 5px;}
+        .total-val { font-size: 32px; font-weight: 800; color: var(--text-dark); line-height: 1;}
+        .total-note { font-size: 12px; color: var(--text-muted); display: block; margin-top: 5px;}
+
+        /* --- FORM PAGAMENTO (Colonna Dx) --- */
+        .payment-section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .payment-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--primary); }
+
+        .radio-option {
             display: flex;
-            justify-content: center;
             align-items: flex-start;
-            flex-wrap: nowrap;
-        }
-        .dettagli-container .dettaglio {
-            flex: 0 0 50%;
-            max-width: 75%;
+            gap: 15px;
             padding: 20px;
-            box-sizing: border-box;
-            text-align: left;
-        }
-        .dettagli-container .dettaglio h2 {
-            margin-bottom: 40px;
-            margin-top: 40px;
-            font-size: 24px;
-            color: #007bff;
-        }
-        .dettagli-container .dettaglio p {
-            margin-bottom: 10px;
-            font-size: 22px;
-            margin-top: 20px;
-            font-family: "Cactus Classical Serif", sans-serif;
-            color: #026702;
-        }
-        .dettagli-container .dettaglio p img {
-            height: 20px;
-            width: 20px;
-            margin-right: 10px;
-        }
-        .payment-options {
-            width: 100%;
-            margin-top: 40px;
-            padding: 20px;
-            box-sizing: border-box;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            border: solid 2px rgba(0, 0, 0, 0.2);
-        }
-        .payment-options img{
-            width: 30px;
-            height: 30px;
-        }
-        .payment-options p{
-            font-size: 16px;
-            color: #96c8fc;
-        }
-        .payment-options h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #007bff;
-        }
-        .payment-options .option {
-            margin-bottom: 20px;
-            font-size: 20px;
-            font-family: "Cactus Classical Serif",serif;
-        }
-        .payment-options .option input {
-            margin-right: 10px;
-        }
-        .payment-options .option img {
-            margin-left: 10px;
-        }
-        .form-pagamento form {
-            max-width: 400px;
-            margin: auto;
-            margin-top: 40px;
-        }
-        .form-pagamento label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            text-align: left;
-        }
-        .form-pagamento input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 4px solid #f0c320;
-            border-radius: 5px;
-        }
-        .form-pagamento input:focus {
-            outline: none;
-        }
-        .form-pagamento button {
-            padding: 12px 24px;
-            background-color: #007bff;
-            color: white;
-            border: solid 2px transparent;
-            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 15px;
             cursor: pointer;
-            font-size: 16px;
+            transition: all 0.3s;
         }
-        .form-pagamento button:hover {
-            background-color: #336699;
-            transform: scale(1.05);
-            border: 2px solid #f0c320;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        .radio-option:hover { border-color: #cbd5e1; background: #f8fafc; }
+        /* Quando il radio è checkato, cambia lo stile del div padre tramite JS o CSS:has (se supportato) */
+
+        .radio-option input[type="radio"] { margin-top: 4px; transform: scale(1.2); accent-color: var(--primary); }
+        .radio-content { flex-grow: 1; }
+        .radio-title { font-weight: 700; font-size: 16px; display: block; margin-bottom: 5px; color: var(--text-dark);}
+        .radio-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4;}
+        .radio-icon { width: 30px; height: 30px; object-fit: contain; }
+
+        /* Form Carta */
+        .card-details-form { margin-top: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;}
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: var(--font-body);
+            background-color: #f8fafc;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus { border-color: var(--primary); background-color: white; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            font-family: var(--font-body);
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+        }
+        .btn-submit:hover { background-color: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; gap: 30px; }
+            .title-main { font-size: 28px; }
+            .payment-section { padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
+
+<%
+    // Recupero Parametri
+    String idAlloggioStr = request.getParameter("id");
+    String costoTotaleStr = request.getParameter("costoTotale");
+    String tipoCamera = request.getParameter("alloggio");
+    String personeStr = request.getParameter("persone");
+    String checkinStr = request.getParameter("dataCheckin");
+    String checkoutStr = request.getParameter("dataCheckout");
+
+    // Preveniamo NullPointerException sulle viste
+    String idAlloggio = (idAlloggioStr != null) ? idAlloggioStr : "0";
+    String costoTotale = (costoTotaleStr != null) ? costoTotaleStr : "0";
+    String persone = (personeStr != null) ? personeStr : "0";
+    String dataCheckin = (checkinStr != null) ? checkinStr : "";
+    String dataCheckout = (checkoutStr != null) ? checkoutStr : "";
+
+    // Logica Immagini (come originale)
+    String immagineAlloggio = "images/camera_doppia.jpg";
+    if (tipoCamera != null) {
+        if (tipoCamera.toLowerCase().contains("tripla")) immagineAlloggio = "images/camera_tripla.jpg";
+        else if (tipoCamera.toLowerCase().contains("quadrupla")) immagineAlloggio = "images/camera_quadrupla.jpg";
+        else if (tipoCamera.toLowerCase().contains("bilocale")) immagineAlloggio = "images/bungalow_bilocale.jpg";
+        else if (tipoCamera.toLowerCase().contains("trilocale")) immagineAlloggio = "images/bungalow_trilocale.jpg";
+    }
+%>
+
+<header class="page-header">
+    <a href="Dispatcher?controllerAction=ClienteHomeManagement.view">
+        <img src="images/Logo.png" alt="VillageVista" class="logo-img" onerror="this.style.display='none'">
+    </a>
+</header>
+
 <div class="container">
-    <h1 class="mb-4">Riepilogo prenotazione</h1>
-        <%
-        // Recupera i parametri dalla richiesta
-        Long idAlloggio = Long.valueOf(request.getParameter("id"));
-        Long costoTotale = Long.valueOf(request.getParameter("costoTotale"));
-        String tipoCamera = request.getParameter("alloggio");
-        Long persone = Long.valueOf(request.getParameter("persone"));
-        Date dataCheckin = Date.valueOf(request.getParameter("dataCheckin"));
-        Date dataCheckout = Date.valueOf(request.getParameter("dataCheckout"));
-        String stato = request.getParameter("stato");
+    <h1 class="title-main">Conferma e Paga</h1>
 
-        String immagineAlloggio = "";
+    <aside class="summary-card">
+        <img src="<%= immagineAlloggio %>" alt="Alloggio" class="summary-img" onerror="this.src='https://via.placeholder.com/600x400?text=Alloggio'">
 
-        if (tipoCamera.equals("Camera matrimoniale")) {
-            immagineAlloggio = "images/camera_doppia.jpg";
-        } else if (tipoCamera.equals("Camera tripla")) {
-            immagineAlloggio = "images/camera_tripla.jpg";
-        } else if (tipoCamera.equals("Camera quadrupla")) {
-            immagineAlloggio = "images/camera_quadrupla.jpg";
-        } else if (tipoCamera.equals("Bungalow bilocale")) {
-            immagineAlloggio = "images/bungalow_bilocale.jpg";
-        } else if (tipoCamera.equals("Bungalow trilocale")) {
-            immagineAlloggio = "images/bungalow_trilocale.jpg";
-        }
-    %>
+        <div class="summary-content">
+            <h2 class="summary-title"><%= tipoCamera %></h2>
 
-    <div class="dettagli-container">
-        <div class="dettaglio alloggio-details">
-            <div class="immagineAlloggio">
-                <img src="<%= immagineAlloggio %>" alt="<%= tipoCamera%>">
-            </div>
-            <p><img src="images/alloggio.png"></img><strong><%= tipoCamera %></strong></p>
-            <p><img src="images/checkin.png"></img> Check-in: <strong><%= dataCheckin %></strong></p>
-            <p><img src="images/checkout.png"></img> Check-out: <strong><%= dataCheckout %></strong></p>
-            <p><img src="images/persone.png"></img> <strong><%= persone %></strong></p>
-            <br>
-            <p><strong><img src="images/colazione.png"></img> Colazione inclusa nel prezzo</strong></p>
-            <p><strong><img src="images/piscina.png"></img> Ingresso in piscina gratuito</strong></p>
-            <p><strong><img src="images/wifi.png"></img> Wi-fi</strong></p>
-            <p><strong><img src="images/condizionata.png"></img> Aria condizionata</strong></p>
-            <p><strong>Totale:</strong> € <%= costoTotale %> <i>(include tasse e costi)</i></p>
-        </div>
+            <ul class="summary-list">
+                <li><img src="images/checkin.png" alt="in" onerror="this.style.display='none'"> Check-in: <%= dataCheckin %></li>
+                <li><img src="images/checkout.png" alt="out" onerror="this.style.display='none'"> Check-out: <%= dataCheckout %></li>
+                <li><img src="images/persone.png" alt="ospiti" onerror="this.style.display='none'"> <%= persone %> Ospiti</li>
+            </ul>
 
-        <div class="dettaglio">
-            <div class="payment-options">
-                <h2>Quando vuoi pagare?</h2>
-                <div class="option">
-                    <input type="radio" id="payLater" name="paymentOption" value="payLater" checked>
-                    <label for="payLater">Paga in struttura</label>
-                    <p>Nessun addebito verrà effettuato sulla tua carta di credito. I dati della carta servono solo per garantire la prenotazione.</p>
-                    <img src="images/cash.png">
-                </div>
-                <div class="option">
-                    <input type="radio" id="payNow" name="paymentOption" value="payNow">
-                    <label for="payNow">Paga ora</label>
-                    <p>Pagherai in modo sicuro quando completerai la prenotazione.</p>
-                    <img src="images/carta.png">
-                </div>
-            </div>
-            <div class="dettaglio form-pagamento">
-                <h2><strong>Procedi al pagamento</strong></h2>
-                <form>
-                    <!-- Campi per i dettagli carta di credito, ad esempio -->
-                    <label for="nomeCarta">Nome sulla Carta</label>
-                    <input type="text" id="nomeCarta" name="nomeCarta" required>
+            <ul class="features-list">
+                <li><img src="images/colazione.png" alt="*" onerror="this.style.display='none'"> Colazione inclusa</li>
+                <li><img src="images/piscina.png" alt="*" onerror="this.style.display='none'"> Ingresso in piscina</li>
+                <li><img src="images/wifi.png" alt="*" onerror="this.style.display='none'"> Wi-fi Free</li>
+                <li><img src="images/condizionata.png" alt="*" onerror="this.style.display='none'"> Aria condizionata</li>
+            </ul>
 
-                    <label for="numeroCarta">Numero Carta di Credito</label>
-                    <input type="text" id="numeroCarta" name="numeroCarta" required>
-
-                    <label for="scadenzaCarta">Scadenza Carta di Credito (MM/YY)</label>
-                    <input type="text" id="scadenzaCarta" name="scadenzaCarta" required>
-
-                    <label for="cvv">CVV</label>
-                    <input type="text" id="cvv" name="cvv" required maxlength="3">
-                </form>
-            <form action="Dispatcher" method="post">
-                <input type="hidden" name="controllerAction" value="ClienteHomeManagement.confPrenotazione">
-                    <!-- Campi nascosti per passare i parametri della prenotazione -->
-                <input type="hidden" name="data_checkin" value="<%= dataCheckin %>">
-                <input type="hidden" name="data_checkout" value="<%= dataCheckout %>">
-                <input type="hidden" name="num_alloggio" value="<%= idAlloggio %>">
-                <input type="hidden" name="persone" value="<%= persone %>">
-                <input type="hidden" name="tipoCamera" value="<%= tipoCamera %>">
-                <input type="hidden" name="totale" value="<%= costoTotale %>">
-                <input type="hidden" name="pagamentoOpzione" value="">
-                <input type="hidden" name="stato" value="confermata">
-                    <button type="submit">Paga € <%= costoTotale %> e prenota</button>
-                </form>
+            <div class="total-price-box">
+                <span class="total-label">Totale da Pagare</span>
+                <span class="total-val">€ <%= costoTotale %></span>
+                <span class="total-note">Tasse e costi di servizio inclusi</span>
             </div>
         </div>
-    </div>
-    <!-- Includi qui eventuali script JavaScript -->
-</body>
+    </aside>
+
+    <main class="payment-section">
+
+        <form action="Dispatcher" method="post" id="checkoutForm">
+            <input type="hidden" name="controllerAction" value="ClienteHomeManagement.confPrenotazione">
+            <input type="hidden" name="data_checkin" value="<%= dataCheckin %>">
+            <input type="hidden" name="data_checkout" value="<%= dataCheckout %>">
+            <input type="hidden" name="num_alloggio" value="<%= idAlloggio %>">
+            <input type="hidden" name="persone" value="<%= persone %>">
+            <input type="hidden" name="tipoCamera" value="<%= tipoCamera %>">
+            <input type="hidden" name="totale" value="<%= costoTotale %>">
+            <input type="hidden" name="stato" value="confermata">
+
+            <input type="hidden" name="pagamentoOpzione" id="pagamentoOpzione" value="payLater">
+
+            <h3 class="payment-title">1. Modalità di Pagamento</h3>
+
+            <label class="radio-option" id="opt-payLater" style="border-color: var(--primary); background: #f8fafc;">
+                <input type="radio" name="paymentOption" value="payLater" checked>
+                <div class="radio-content">
+                    <span class="radio-title">Paga in Struttura</span>
+                    <span class="radio-desc">Nessun addebito ora. I dati della carta servono solo a garanzia della prenotazione.</span>
+                </div>
+                <img src="images/cash.png" class="radio-icon" alt="Cash" onerror="this.style.display='none'">
+            </label>
+
+            <label class="radio-option" id="opt-payNow">
+                <input type="radio" name="paymentOption" value="payNow">
+                <div class="radio-content">
+                    <span class="radio-title">Paga Subito</span>
+                    <span class="radio-desc">Addebito immediato per l'intero importo della vacanza.</span>
+                </div>
+                <img src="images/carta.png" class="radio-icon" alt="Card" onerror="this.style.display='none'">
+            </label>
+
+            <h3 class="payment-title" style="margin-top: 40px;">2. Dati della Carta</h3>
+
+            <div class="card-details-form">
+                <div class="form-group">
+                    <label for="nomeCarta">Titolare della Carta</label>
+                    <input type="text" id="nomeCarta" name="nomeCarta" class="form-control" placeholder="Mario Rossi" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="numeroCarta">Numero Carta</label>
+                    <input type="text" id="numeroCarta" name="numeroCarta" class="form-control" placeholder="0000 0000 0000 0000" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="scadenzaCarta">Scadenza</label>
+                        <input type="text" id="scadenzaCarta" name="scadenzaCarta" class="form-control" placeholder="MM/YY" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cvv">Codice di Sicurezza (CVV)</label>
+                        <input type="password" id="cvv" name="cvv" class="form-control" placeholder="123" required maxlength="3">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                Conferma e Paga € <%= costoTotale %>
+            </button>
+
+        </form>
+    </main>
+
+</div>
+
 <script>
-    // Aggiorna il valore del campo nascosto pagamentoOpzione in base alla selezione dell'utente
-    document.querySelectorAll('input[name="paymentOption"]').forEach((element) => {
-        element.addEventListener('change', function() {
-            document.querySelector('input[name="pagamentoOpzione"]').value = this.value;
-        });
-    });
-    // Imposta il valore iniziale al caricamento della pagina
-    document.querySelector('input[name="pagamentoOpzione"]').value = document.querySelector('input[name="paymentOption"]:checked').value;
-
     document.addEventListener('DOMContentLoaded', function() {
+
+        // --- LOGICA RADIO BUTTONS (Grafica e Campo Nascosto) ---
+        const radioBtns = document.querySelectorAll('input[name="paymentOption"]');
+        const hiddenOpt = document.getElementById('pagamentoOpzione');
+        const optPayLater = document.getElementById('opt-payLater');
+        const optPayNow = document.getElementById('opt-payNow');
+
+        radioBtns.forEach(btn => {
+            btn.addEventListener('change', function() {
+                // Aggiorna il campo nascosto da inviare al server
+                hiddenOpt.value = this.value;
+
+                // Aggiorna la grafica dei box
+                if (this.value === 'payNow') {
+                    optPayNow.style.borderColor = 'var(--primary)';
+                    optPayNow.style.background = '#f8fafc';
+                    optPayLater.style.borderColor = '#e2e8f0';
+                    optPayLater.style.background = 'white';
+                } else {
+                    optPayLater.style.borderColor = 'var(--primary)';
+                    optPayLater.style.background = '#f8fafc';
+                    optPayNow.style.borderColor = '#e2e8f0';
+                    optPayNow.style.background = 'white';
+                }
+            });
+        });
+
+        // --- FORMATTAZIONE CAMPI CARTA DI CREDITO ---
         const scadenzaCartaInput = document.getElementById('scadenzaCarta');
         const numeroCartaInput = document.getElementById('numeroCarta');
+        const cvvInput = document.getElementById('cvv');
 
+        // Formatta Scadenza MM/YY
         scadenzaCartaInput.addEventListener('input', function(e) {
-            let input = e.target.value;
-
-            // Rimuove tutti i caratteri non numerici
-            input = input.replace(/\D/g, '');
-
+            let input = e.target.value.replace(/\D/g, ''); // Solo numeri
             if (input.length > 2) {
                 input = input.slice(0, 2) + '/' + input.slice(2, 4);
             }
-
-            // Limita la lunghezza del campo a 5 caratteri
             if (input.length > 5) {
                 input = input.slice(0, 5);
             }
-
             e.target.value = input;
         });
 
+        // Formatta Numero Carta con Spazi
         numeroCartaInput.addEventListener('input', function(e) {
-            let input = e.target.value;
-
-            // Rimuove tutti i caratteri non numerici
-            input = input.replace(/\D/g, '');
-
-            // Limita l'input a un massimo di 16 cifre
+            let input = e.target.value.replace(/\D/g, ''); // Solo numeri
             if (input.length > 16) {
                 input = input.slice(0, 16);
             }
-
-            // Inserisce uno spazio ogni 4 cifre
             let formattedInput = '';
             for (let i = 0; i < input.length; i += 4) {
                 formattedInput += input.slice(i, i + 4) + ' ';
             }
+            e.target.value = formattedInput.trim();
+        });
 
-            // Rimuove l'ultimo spazio se presente
-            formattedInput = formattedInput.trim();
-
-            e.target.value = formattedInput;
+        // Forza solo numeri nel CVV
+        cvvInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
         });
     });
 </script>
-</html>
 
+</body>
+</html>

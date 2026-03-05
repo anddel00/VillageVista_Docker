@@ -2,362 +2,338 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.concurrent.TimeUnit" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    List<Alloggio> alloggiDisponibili = (List<Alloggio>) request.getAttribute("alloggiDisponibili");
+    java.sql.Date dataCheckin = (java.sql.Date) request.getAttribute("data_checkin");
+    java.sql.Date dataCheckout = (java.sql.Date) request.getAttribute("data_checkout");
+
+    // Calcolo giorni (salvaguardando il caso di date nulle o differenze a zero)
+    long diff = 1;
+    if (dataCheckin != null && dataCheckout != null) {
+        diff = (dataCheckout.getTime() - dataCheckin.getTime()) / (1000 * 60 * 60 * 24);
+        if (diff <= 0) diff = 1;
+    }
+%>
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Alloggi Disponibili</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alloggi Disponibili | VillageVista</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
+        /* --- CSS VARIABLES (Design System Cliente) --- */
+        :root {
+            --primary: #1e3a8a;
+            --primary-hover: #172554;
+            --accent: #d97706;
+            --accent-hover: #b45309;
+            --bg-page: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --font-headings: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            --success: #16a34a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: "Cactus Classical Serif",serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+            font-family: var(--font-body);
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            line-height: 1.6;
         }
-        .header {
-            background-color: transparent;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-            height: auto;
-            margin-bottom: 50px;
-        }
-        .header img{
-            border: 1px solid #ffd243;
-            position: absolute;
-            top: 20px;
-            left: 44%;
-            border-radius: 20px;
-        }
-        .form-container {
+
+        /* --- HEADER & LOGO --- */
+        .page-header {
+            background-color: var(--primary);
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
-            margin-top: 110px;
-            padding: 20px;
-            background-color: rgba(125, 185, 243, 0.49); /* Sfumatura blu chiara */
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            margin-bottom: 50px;
-            margin-left: 50px;
-            margin-right: 50px;
-        }
-
-        .form-container form {
-            display: flex;
-            flex-wrap: nowrap;
             align-items: center;
-            width: 100%;
-            margin-bottom: auto;
-
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
+        .logo-img { height: 60px; border-radius: 8px; }
 
-        .form-container input[type="date"],
-        .form-container input[type="text"],
-        .form-container input[type="number"],
-        .form-container select {
-            margin-right: 10px;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #f0c320;
-            font-family: "Cactus Classical Serif", serif;
-            flex: 1; /* Fa sì che i campi occupino la stessa larghezza */
-            margin-bottom: 10px; /* Spazio inferiore uniforme */
-        }
-
-        .form-container button[type="submit"] {
-            background-color: #336699;
-            border: 2px solid transparent;
-            border-radius: 5px;
+        .btn-back-header {
             color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
             padding: 10px 20px;
-            cursor: pointer;
-            font-family: "Cactus Classical Serif", serif;
-            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            border-radius: 8px;
+            transition: background 0.3s;
         }
+        .btn-back-header:hover { background: rgba(255,255,255,0.2); }
 
-        .form-container button[type="submit"]:hover {
-            background-color: #336699;
-            transform: scale(1.05);
-            border: 2px solid #f0c320;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .container {
+        /* --- SEARCH BAR (Responsive) --- */
+        .search-container {
+            background: white;
+            padding: 20px;
+            margin: -20px auto 40px auto;
+            max-width: 1100px;
             width: 90%;
-            margin: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-container form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        .input-group label { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+
+        .search-container input, .search-container select {
+            padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;
+            outline: none; font-family: var(--font-body); background-color: #f8fafc;
+        }
+        .search-container input:focus, .search-container select:focus { border-color: var(--accent); }
+
+        .btn-search {
+            background-color: var(--primary); color: white; border: none; padding: 14px;
+            border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.3s;
+            font-family: var(--font-body);
+        }
+        .btn-search:hover { background-color: var(--primary-hover); }
+
+        /* --- MAIN CONTENT --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px 60px 20px; }
+        .title-main { font-family: var(--font-headings); font-size: 32px; color: var(--primary); margin-bottom: 30px; text-align: center; }
+
+        /* --- ALLOGGIO CARD (Horizontal Layout) --- */
+        .alloggio-card {
+            background: white;
+            border-radius: 20px;
             overflow: hidden;
-            padding: 20px;
-            background-color: rgba(125, 185, 243, 0.49); /* Sfumatura blu chiara */
-            border-radius: 10px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .alloggi-list {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease, box-shadow 0.3s;
+        }
+        .alloggio-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
+
+        .card-image {
+            width: 380px;
+            aspect-ratio: 4 / 3; /* Blocca le proporzioni dell'immagine in modo assoluto */
+            align-self: flex-start; /* Dice all'immagine di NON allungarsi col testo */
+            flex-shrink: 0;
+            position: relative;
         }
 
-        .alloggio-post {
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .card-content {
+            flex-grow: 1;
+            padding: 30px;
             display: flex;
-            align-items: flex-start;
-            background: #f9f9f9;
-            margin: 30px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            width: 95%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .post-title{
-            font-size: 32px;
-            font-family: "Cactus Classical Serif",serif;
-            margin: 30px;
-        }
+            flex-direction: column;
+            min-height: 100%; /* Si assicura che il testo riempia sempre la card */
+        }        .post-title { font-family: var(--font-headings); font-size: 28px; color: var(--primary); margin-bottom: 15px; line-height: 1.2;}
 
-        .alloggio-image {
-            flex: 0 0 auto;
-            margin-right: 20px;
-            margin-left: 20px;
-            margin-top: 45px;
-            margin-bottom: 40px;
-        }
+        .meta-info { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
+        .meta-item { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text-muted); }
+        .meta-item img { width: 18px; height: 18px; opacity: 0.7;}
 
-        .alloggio-image img {
-            max-width: 400px;
-            border-radius: 10px;
-        }
-
-        .alloggio-details {
-            flex: 1 1 auto; /* Flessibile, larghezza automatica */
-            margin-left: 20px; /* Spazio a sinistra delle caratteristiche */
-            font-size: 24px;
-            margin-top:40px;
-
-        }
-        .alloggio-details h2 {
-            margin: 0;
-            padding-bottom: 30px;
-            color: #000000;
-
-        }
-
-        .alloggio-details p {
-            margin: 5px 0;
-            color: #000000;
-            font-family: "Cactus Classical Serif",sans-serif;
-        }
-        .alloggio-actions {
-            display: flex;
-            margin-top: 25px; /* Posiziona l'area delle azioni in fondo al contenitore */
-            gap: 10px; /* Spazio tra i pulsanti */
-        }
-        .alloggio-details img{
-            height:24px;
-            width: 24px;
-            margin-right: 5px;
-        }
-
-        .alloggio-actions button,
-        .alloggio-actions a {
-            margin-top: 5px;
-            background-color: #336699;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: "Cactus Classical Serif", serif;
-            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-            font-size: 16px;
-            text-decoration: none; /* Rimuovi la sottolineatura dai link */
-        }
-        .alloggio-actions button:hover{
-            transform: scale(1.05);
-            background-color: #f9d64e;
-            color: black;
-        }
-
-        .alloggio-actions a:hover {
-            transform: scale(1.05);
-            background-color: #f9d64e;
-            color: black;
-        }
-
-        .btn-maggiori-dettagli {
-            margin-left: 20px;
-            background-color: #f0c320;
-            color: #333;
-            font-size: 16px;
-        }
-
-        .btn-maggiori-dettagli:hover {
-            transform: scale(1.05);
-            background-color: #f9d64e;
-            color: black;
-        }
+        /* --- SERVICES (Collapsible) --- */
         .caratteristiche-addizionali {
-            display: none; /* Inizialmente nascoste */
-            margin-top: 10px; /* Spazio tra le caratteristiche e il resto del contenuto */
-            padding-top: 10px; /* Spazio interno sopra le caratteristiche */
-            border-top: 1px solid #ddd; /* Linea divisoria sopra le caratteristiche */
-            color: #016401;
-            font-family: "Cactus Classical Serif",sans-serif;
+            background: #fdfcf6; border: 1px dashed var(--accent);
+            border-radius: 10px; padding: 15px; margin-bottom: 20px;
+            display: none; grid-template-columns: 1fr 1fr; gap: 10px;
+            animation: fadeIn 0.3s ease;
         }
-        .caratteristiche-addizionali img{
-            height:24px;
-            width: 24px;
-            margin-right: 5px;
-            margin-top: 5px;
+        .caratteristiche-addizionali.show { display: grid; }
+        .service-tag { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #166534; font-weight: 600; }
+        .service-tag img { width: 16px; }
 
-        }
-
-        .caratteristiche-addizionali.show {
-          display: none;/* Mostra le caratteristiche quando la classe 'show' è presente */
-            color: #016401;
-
+        /* --- PRICE & ACTIONS --- */
+        .card-footer {
+            margin-top: auto; padding-top: 20px; border-top: 1px solid #f1f5f9;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .caratteristiche-addizionali.hide {
-            display: block; /* Nasconde le caratteristiche quando la classe 'hide' è presente */
-            color: #016401;
-        }
-        .prezzo{
-            text-align: center;
-            display: table-column;
-            justify-content: center;
-            font-family: "Cactus Classical Serif",serif;
-            font-size: 28px;
-            margin: 20px;
-            margin-top:45px;
-            padding: 20px;
-            background: linear-gradient(to top right, #eaf4fc, #e5f0fc);
-            border-radius: 10px;
-            color: #0066da;
-        }
-        .prezzo p{
-            margin-top: 5px;
-            margin-bottom: 5px;
+        .price-display { display: flex; flex-direction: column; }
+        .price-total { font-size: 32px; font-weight: 800; color: var(--primary); line-height: 1; }
+        .price-night { font-size: 13px; color: var(--text-muted); margin-top: 4px;}
+
+        .actions-group { display: flex; gap: 10px; }
+        .btn {
+            padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; font-family: var(--font-body); border: none; text-decoration: none; font-size: 15px; text-align: center;
         }
 
+        .btn-book { background-color: var(--accent); color: white; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3); }
+        .btn-book:hover { background-color: var(--accent-hover); transform: scale(1.03); }
+
+        .btn-details { background-color: #f1f5f9; color: var(--text-dark); border: 1px solid #e2e8f0; }
+        .btn-details:hover { background-color: #e2e8f0; }
+
+        /* --- EMPTY STATE --- */
+        .empty-state { text-align: center; padding: 60px 20px; background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .empty-state h2 { color: var(--text-muted); margin-bottom: 10px;}
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .alloggio-card { flex-direction: column; }
+            .card-image { width: 100%; height: 250px; }
+            .search-container { margin-top: 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .page-header { flex-direction: column; gap: 15px; }
+            .card-footer { flex-direction: column; gap: 20px; align-items: stretch; text-align: center; }
+            .actions-group { flex-direction: column; }
+            .caratteristiche-addizionali.show { grid-template-columns: 1fr; }
+            .search-container form { grid-template-columns: 1fr 1fr; }
+            .btn-search { grid-column: 1 / -1; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-<header class="header">
-    <img src="images/Logo.png"  height="90" width="140" alt="LOGO"/>
+
+<header class="page-header">
+    <a href="Dispatcher?controllerAction=ClienteHomeManagement.view">
+        <img src="images/Logo.png" alt="LOGO" class="logo-img" onerror="this.style.display='none'">
+    </a>
+
+    <a href="Dispatcher?controllerAction=ClienteHomeManagement.view" class="btn-back-header">
+        ← Torna all'Area Riservata
+    </a>
 </header>
-<div class="form-container">
+
+<div class="search-container">
     <form action="Dispatcher" method="post">
         <input type="hidden" name="controllerAction" value="ClienteHomeManagement.disponibilita">
-        <input type="date" name="data_checkin" required><br>
-        <input type="date" name="data_checkout"  required><br>
-        <input type="number" name="persone" placeholder="Per quante persone?" required><br>
-        <select name="alloggio" required>
-            <option value="">Tipologia</option>
-            <option value="Bungalow">Bungalow</option>
-            <option value="Camera">Camera</option>
-        </select><br>
-        <button type="submit">Controlla disponibilità</button>
+        <div class="input-group">
+            <label>Check-in</label>
+            <input type="date" name="data_checkin" value="<%= dataCheckin != null ? dataCheckin : "" %>" required>
+        </div>
+        <div class="input-group">
+            <label>Check-out</label>
+            <input type="date" name="data_checkout" value="<%= dataCheckout != null ? dataCheckout : "" %>" required>
+        </div>
+        <div class="input-group">
+            <label>Ospiti</label>
+            <input type="number" name="persone" placeholder="N°" required min="1" max="5">
+        </div>
+        <div class="input-group">
+            <label>Tipologia</label>
+            <select name="alloggio" required>
+                <option value="Bungalow">Bungalow</option>
+                <option value="Camera">Camera</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-search">Aggiorna Ricerca</button>
     </form>
 </div>
+
 <div class="container">
-    <h1>Soluzioni Disponibili</h1>
-    <%
-        List<Alloggio> alloggiDisponibili = (List<Alloggio>) request.getAttribute("alloggiDisponibili");
-        java.sql.Date dataCheckin = (java.sql.Date) request.getAttribute("data_checkin");
-        java.sql.Date dataCheckout = (java.sql.Date) request.getAttribute("data_checkout");
-        if (alloggiDisponibili != null && !alloggiDisponibili.isEmpty()) {
-    %>
+
+    <% if (alloggiDisponibili != null && !alloggiDisponibili.isEmpty()) { %>
+    <h1 class="title-main">Abbiamo trovato <%= alloggiDisponibili.size() %> soluzioni perfette per te</h1>
     <div class="alloggi-list">
         <%
-            long diff = (dataCheckout.getTime() - dataCheckin.getTime()) / (1000 * 60 * 60 * 24);
             for (Alloggio alloggio : alloggiDisponibili) {
                 Long prezzonotte = alloggio.getPrezzonotte();
                 Long costoTotale = (prezzonotte != null ? prezzonotte : 0) * diff;
+
+                int persone = Integer.parseInt(alloggio.getCapienza());
+                String tipo = alloggio.getTipo();
+                String tipoCamera = "";
+                String imagePath = "";
+
+                if (tipo.equalsIgnoreCase("camera")) {
+                    if (persone == 2) { tipoCamera = "Camera Matrimoniale"; imagePath = "images/camera_doppia.jpg"; }
+                    else if (persone == 3) { tipoCamera = "Camera Tripla"; imagePath = "images/camera_tripla.jpg"; }
+                    else if (persone == 4) { tipoCamera = "Camera Quadrupla"; imagePath = "images/camera_quadrupla.jpg"; }
+                    else { tipoCamera = "Camera per " + persone + " persone"; imagePath = "images/camera_default.jpg"; }
+                } else if (tipo.equalsIgnoreCase("bungalow")) {
+                    if (persone <= 3) { tipoCamera = "Bungalow Bilocale"; imagePath = "images/bungalow_bilocale.jpg"; }
+                    else { tipoCamera = "Bungalow Trilocale"; imagePath = "images/bungalow_trilocale.jpg"; }
+                } else {
+                    tipoCamera = "Alloggio per " + persone + " persone"; imagePath = "images/alloggio_default.jpg";
+                }
         %>
-        <div class="alloggio-post">
-            <div class="alloggio-image">
-                <%
-                    int persone = Integer.parseInt(alloggio.getCapienza());
-                    String tipo = alloggio.getTipo();
-                    String tipoCamera = "";
-                    String imagePath = "";
 
-                    if (tipo.equalsIgnoreCase("camera")) {
-                        if (persone == 2) {
-                            tipoCamera = "Camera matrimoniale";
-                            imagePath = "images/camera_doppia.jpg";
-                        } else if (persone == 3) {
-                            tipoCamera = "Camera tripla";
-                            imagePath = "images/camera_tripla.jpg";
-                        } else if (persone == 4) {
-                            tipoCamera = "Camera quadrupla";
-                            imagePath = "images/camera_quadrupla.jpg";
-                        } else {
-                            tipoCamera = "Camera per " + persone + " persone";
-                            imagePath = "images/camera_default.jpg";
-                        }
-                    } else if (tipo.equalsIgnoreCase("bungalow")) {
-                        if (persone == 2 || persone == 3) {
-                            tipoCamera = "Bungalow bilocale";
-                            imagePath = "images/bungalow_bilocale.jpg";
-                        } else if (persone == 4 || persone == 5) {
-                            tipoCamera = "Bungalow trilocale";
-                            imagePath = "images/bungalow_trilocale.jpg";
-                        }
-                    } else {
-                        tipoCamera = "Alloggio per " + persone + " persone";
-                        imagePath = "images/alloggio_default.jpg";
-                    }
-                %>
-                <img src="<%= imagePath %>" alt="<%= tipoCamera %>">
+        <article class="alloggio-card">
+            <div class="card-image">
+                <img src="<%= imagePath %>" alt="<%= tipoCamera %>" onerror="this.src='https://via.placeholder.com/400x300?text=VillageVista'">
             </div>
-            <div class="alloggio-details">
+
+            <div class="card-content">
                 <h2 class="post-title"><%= tipoCamera %></h2>
-                <p><strong><img src="images/persone.png"></img>Ospiti:</strong> <%= alloggio.getCapienza() %></p>
-                <p><strong><img src="images/checkin.png"></img>Data di arrivo:</strong> <%= dataCheckin %></p>
-                <p><strong><img src="images/checkout.png"></img>Data di partenza:</strong> <%= dataCheckout %></p>
 
-                <div class="caratteristiche-addizionali show">
-                    <p><strong><img src="images/colazione.png"></img>Colazione inclusa nel prezzo</strong></p>
-                    <p><strong><img src="images/piscina.png"></img>Ingresso in piscina gratuito</strong></p>
-                    <p><strong><img src="images/wifi.png"></img>Wi-fi</strong></p>
-                    <p><strong><img src="images/condizionata.png"></img>Aria condizionata</strong></p>
+                <div class="meta-info">
+                    <div class="meta-item"><img src="images/persone.png" alt="Ospiti" onerror="this.style.display='none'"> <%= alloggio.getCapienza() %> Ospiti</div>
+                    <div class="meta-item"><img src="images/checkin.png" alt="In" onerror="this.style.display='none'"> In: <%= dataCheckin %></div>
+                    <div class="meta-item"><img src="images/checkout.png" alt="Out" onerror="this.style.display='none'"> Out: <%= dataCheckout %></div>
                 </div>
-                <div class="alloggio-actions">
-                    <a href="Dispatcher?controllerAction=ClienteHomeManagement.goToPagamento&id=<%= alloggio.getNum_alloggio() %>&costoTotale=<%= costoTotale %>&dataCheckin=<%= dataCheckin %>&dataCheckout=<%= dataCheckout %>&persone=<%= persone %>&alloggio=<%= tipoCamera %>">
-                        Prenota
-                    </a>
-                    <button type="button" class="btn-maggiori-dettagli">Servizi inclusi</button>
+
+                <div class="caratteristiche-addizionali hide">
+                    <div class="service-tag"><img src="images/colazione.png" alt="*"> Colazione inclusa nel prezzo</div>
+                    <div class="service-tag"><img src="images/piscina.png" alt="*"> Ingresso in piscina gratuito</div>
+                    <div class="service-tag"><img src="images/wifi.png" alt="*"> Wi-fi Free</div>
+                    <div class="service-tag"><img src="images/condizionata.png" alt="*"> Aria condizionata</div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="price-display">
+                        <span class="price-total">€ <%= costoTotale %></span>
+                        <span class="price-night">€ <%= prezzonotte %> / notte per <%= diff %> notti</span>
+                    </div>
+
+                    <div class="actions-group">
+                        <button type="button" class="btn btn-details btn-maggiori-dettagli">Servizi Inclusi</button>
+                        <a class="btn btn-book" href="Dispatcher?controllerAction=ClienteHomeManagement.goToPagamento&id=<%= alloggio.getNum_alloggio() %>&costoTotale=<%= costoTotale %>&dataCheckin=<%= dataCheckin %>&dataCheckout=<%= dataCheckout %>&persone=<%= persone %>&alloggio=<%= tipoCamera %>">
+                            Prenota
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="prezzo">
-                <p><strong>Prezzo per notte</strong></p>
-                <p> €<%= prezzonotte %></p>
-                <p><strong>Totale</strong></p>
-                <p>€<%= costoTotale %></p>
-            </div>
-        </div>
+        </article>
         <% } %>
     </div>
     <% } else { %>
-    <p>Nessun alloggio disponibile per i criteri selezionati.</p>
+    <div class="empty-state">
+        <span style="font-size: 40px;">😔</span>
+        <h2>Nessun alloggio disponibile</h2>
+        <p>Non ci sono alloggi liberi per le date o i criteri selezionati.</p>
+    </div>
     <% } %>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var btnsMaggioriDettagli = document.querySelectorAll('.btn-maggiori-dettagli');
+        const btnsMaggioriDettagli = document.querySelectorAll('.btn-maggiori-dettagli');
 
         btnsMaggioriDettagli.forEach(function(btn) {
             btn.addEventListener('click', function() {
-                var alloggioPost = this.closest('.alloggio-post');
-                var caratteristicheAddizionali = alloggioPost.querySelector('.caratteristiche-addizionali');
-                caratteristicheAddizionali.classList.toggle('hide');
+                const alloggioPost = this.closest('.alloggio-card');
+                const caratteristiche = alloggioPost.querySelector('.caratteristiche-addizionali');
+                const isShowing = caratteristiche.classList.toggle('show');
+                this.textContent = isShowing ? 'Chiudi Info' : 'Servizi Inclusi';
+                this.style.backgroundColor = isShowing ? '#e2e8f0' : '#f1f5f9';
             });
         });
     });
