@@ -11,6 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
+*.war
 
 ### Eclipse ###
 .apt_generated
@@ -35,4 +36,4 @@ build/
 .vscode/
 
 ### Mac OS ###
-.DS_Storesrc/main/webapp/images/
+.DS_Store
