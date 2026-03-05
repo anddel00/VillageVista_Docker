@@ -74,8 +74,4 @@ public class MySQLJDBCDAOFactory extends DAOFactory {
     @Override
     public MessaggioDAO getMessaggioDAO(){return new MessaggioDAOMySQLJDBCImpl(connection);}
 
-
-
-
-
 }
