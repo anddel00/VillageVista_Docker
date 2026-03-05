@@ -46,7 +46,7 @@ public class DipendenteDAOMySQLJDBCImpl implements DipendenteDAO {
 
         try {
             String sql
-                    = " INSERT INTO dipendente "
+                    = " INSERT INTO DIPENDENTE "
                     + "( cf_dip,"
                     + " nome_dip,"
                     + " cognome_dip,"
@@ -88,7 +88,7 @@ public class DipendenteDAOMySQLJDBCImpl implements DipendenteDAO {
 
         try {
             String sql
-                    = " UPDATE dipendente "
+                    = " UPDATE DIPENDENTE "
                     + " SET cf_dip = ?, "
                     + " nome_dip = ?, "
                     + " cognome_dip = ?, "
@@ -125,7 +125,7 @@ public class DipendenteDAOMySQLJDBCImpl implements DipendenteDAO {
         try{
 
             String sql
-                    = "DELETE FROM dipendente WHERE DipId = ? ";
+                    = "DELETE FROM DIPENDENTE WHERE DipId = ? ";
 
             ps = conn.prepareStatement(sql);
             ps.setLong(1,dipId);
@@ -149,7 +149,7 @@ public class DipendenteDAOMySQLJDBCImpl implements DipendenteDAO {
 
             String sql
                     = " SELECT *"
-                    + " FROM dipendente "
+                    + " FROM DIPENDENTE "
                     + " WHERE "
                     + "   dipId = ? ";
 
@@ -215,7 +215,7 @@ public class DipendenteDAOMySQLJDBCImpl implements DipendenteDAO {
         try{
             String sql
                     = " SELECT *"
-                    + " FROM dipendente ";
+                    + " FROM DIPENDENTE ";
 
             ps = conn.prepareStatement(sql);
             ResultSet resultSet = ps.executeQuery();

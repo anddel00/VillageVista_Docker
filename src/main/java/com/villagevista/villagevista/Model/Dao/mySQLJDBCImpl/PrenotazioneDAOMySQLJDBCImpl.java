@@ -49,7 +49,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
 
         try {
             String sql
-                    = "INSERT INTO prenotazione "
+                        = "INSERT INTO prenotazione "
                     + " (data_checkin, "
                     + " data_checkout, "
                     + " num_alloggio, "
@@ -169,7 +169,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
         try{
             String sql
                     = " SELECT *"
-                    + " FROM PRENOTAZIONE "
+                    + " FROM prenotazione "
                     + " WHERE num_prenotazione = ?";
 
             ps = conn.prepareStatement(sql);
@@ -196,7 +196,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
          try{
              String sql
                      = " SELECT *"
-                     + " FROM PRENOTAZIONE "
+                     + " FROM prenotazione "
                      + " WHERE cognome_p = ?"
                      + " AND stato <> 'Cancellata' ";
 
@@ -227,7 +227,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
         try{
             String sql
                     = " SELECT *"
-                    + " FROM PRENOTAZIONE "
+                    + " FROM prenotazione "
                     + " WHERE id_cliente = ?"
                     + " AND stato <> 'Cancellata' ";
 
@@ -259,7 +259,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
         try{
             String sql
                     = " SELECT *"
-                    + " FROM PRENOTAZIONE "
+                    + " FROM prenotazione "
                     + " WHERE cognome_p = ?"
                     + " AND stato = 'Cancellata'";
 
@@ -291,7 +291,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
         try{
             String sql
                     = " SELECT *"
-                    + " FROM PRENOTAZIONE "
+                    + " FROM prenotazione "
                     + " WHERE stato = 'Cancellata' ";
 
             ps = conn.prepareStatement(sql);
@@ -319,7 +319,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
         try{
             String sql
                     = " SELECT *"
-                    + " FROM PRENOTAZIONE ";
+                    + " FROM prenotazione ";
 
             ps = conn.prepareStatement(sql);
             ResultSet resultSet = ps.executeQuery();
@@ -346,7 +346,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
 
         try {
             // Costruiamo la query in base al mese specificato usando data_checkin
-            String sql = "SELECT * FROM PRENOTAZIONE " +
+            String sql = "SELECT * FROM prenotazione " +
                     "WHERE MONTH (data_checkin) = ?" +
                     " AND stato <> 'Cancellata'";
 
@@ -376,7 +376,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
 
         public int countByCliente(Long id_cliente){
             int count = 0;
-            String query = "SELECT COUNT(*) FROM PRENOTAZIONE " +
+            String query = "SELECT COUNT(*) FROM prenotazione " +
                     " WHERE id_cliente = ? " +
                     " AND stato <> 'Cancellata' ";
 
@@ -400,7 +400,7 @@ public class PrenotazioneDAOMySQLJDBCImpl implements PrenotazioneDAO {
         try{
 
             String sql =
-                             " DELETE FROM PRENOTAZIONE " +
+                             " DELETE FROM prenotazione " +
                              " WHERE num_prenotazione = ? ";
 
             ps = conn.prepareStatement(sql);

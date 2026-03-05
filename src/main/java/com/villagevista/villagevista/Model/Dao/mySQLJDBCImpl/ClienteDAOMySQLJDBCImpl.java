@@ -119,7 +119,7 @@ public class ClienteDAOMySQLJDBCImpl implements ClienteDAO {
     public void delete(Long num_p) {
         PreparedStatement ps = null;
         try {
-            String sql = "DELETE FROM cliente WHERE num_p = ?";
+            String sql = "DELETE FROM CLIENTE WHERE num_p = ?";
             ps = conn.prepareStatement(sql);
             ps.setLong(1, num_p);
 
@@ -175,7 +175,7 @@ public class ClienteDAOMySQLJDBCImpl implements ClienteDAO {
         try{
             String sql
                     = " SELECT *"
-                    +" FROM cliente "
+                    +" FROM CLIENTE "
                     + " WHERE "
                     + " cognome_cliente = ?";
 
@@ -202,7 +202,7 @@ public class ClienteDAOMySQLJDBCImpl implements ClienteDAO {
         try{
             String sql
                     = " SELECT *"
-                    +" FROM cliente "
+                    +" FROM CLIENTE "
                     + " WHERE "
                     + " num_p = ?";
 

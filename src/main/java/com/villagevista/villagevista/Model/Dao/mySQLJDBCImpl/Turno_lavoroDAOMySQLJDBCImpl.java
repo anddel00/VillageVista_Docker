@@ -295,7 +295,7 @@ public Turno_lavoroDAOMySQLJDBCImpl(Connection conn){this.conn = conn;}
 
             String sql
                     = " SELECT *"
-                    + " FROM turno_lavoro "
+                    + " FROM TURNO_LAVORO "
                     + " WHERE "
                     + "   turno_id = ? ";
 

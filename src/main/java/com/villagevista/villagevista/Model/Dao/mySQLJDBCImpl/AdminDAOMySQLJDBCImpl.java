@@ -35,7 +35,7 @@ public class AdminDAOMySQLJDBCImpl implements AdminDAO {
 
         try {
             String sql
-                    = "INSERT INTO admin "
+                    = "INSERT INTO ADMIN "
                     + "(ADMIN_ID, username, password, nome, cognome, cf_admin) "
                     + "VALUES (?,?,?,?,?,?)";
 
@@ -77,7 +77,7 @@ public class AdminDAOMySQLJDBCImpl implements AdminDAO {
 
         try{
             String sql
-                    = " UPDATE admin "
+                    = " UPDATE ADMIN "
                     + " SET "
                     + " nome = ?, "
                     + " cognome = ?, "
@@ -117,7 +117,7 @@ public class AdminDAOMySQLJDBCImpl implements AdminDAO {
         try{
             String sql
                     =" SELECT * "
-                    +" FROM admin"
+                    +" FROM ADMIN"
                     +" WHERE "
                     +" userId = ?";
 
@@ -142,7 +142,7 @@ public class AdminDAOMySQLJDBCImpl implements AdminDAO {
         try{
             String sql
                     =" SELECT * "
-                    +" FROM admin "
+                    +" FROM ADMIN "
                     +" WHERE "
                     +" username = ?";
 
@@ -166,7 +166,7 @@ public class AdminDAOMySQLJDBCImpl implements AdminDAO {
         PreparedStatement ps;
         Admin admin = null;
         try {
-            String sql = "SELECT * FROM admin WHERE USERNAME = ? AND PASSWORD = ?";
+            String sql = "SELECT * FROM ADMIN WHERE USERNAME = ? AND PASSWORD = ?";
             ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, password);
