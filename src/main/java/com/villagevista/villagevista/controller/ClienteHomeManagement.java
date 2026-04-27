@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.villagevista.villagevista.Model.Dao.DAOFactory.MYSQLJDBCIMPL;
+import static com.villagevista.villagevista.Model.Dao.DAOFactory.POSTGRESJDBCIMPL;
 
 public class ClienteHomeManagement {
     private ClienteHomeManagement() {
@@ -48,7 +48,7 @@ public class ClienteHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -115,7 +115,7 @@ public class ClienteHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -196,7 +196,7 @@ public class ClienteHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -262,7 +262,7 @@ public class ClienteHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -340,7 +340,7 @@ public class ClienteHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();

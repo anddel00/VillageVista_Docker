@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.villagevista.villagevista.Model.Dao.DAOFactory.MYSQLJDBCIMPL;
+import static com.villagevista.villagevista.Model.Dao.DAOFactory.POSTGRESJDBCIMPL;
 
 public class LoginClienteManagement {
     private  LoginClienteManagement(){}
@@ -117,7 +117,7 @@ public class LoginClienteManagement {
             sessionFactoryParameters.put("request", request);
             sessionFactoryParameters.put("response", response);
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();

@@ -14,6 +14,7 @@ public class Prenotazione {
     private Long totale;
     private String pagato;
     private String stato;
+    private Cliente cliente;
 
     public Long getNumPrenotazione() {return num_prenotazione;}
     public void setNum_prenotazione(Long num_prenotazione){this.num_prenotazione=num_prenotazione;}
@@ -40,7 +41,8 @@ public class Prenotazione {
 
     public String getStato(){return stato;}
     public void setStato(String stato){this.stato = stato;}
-
-
+    
+    public Cliente getCliente() {return cliente;}
+    public void setCliente(Cliente cliente) {this.cliente = cliente;}
 
 }

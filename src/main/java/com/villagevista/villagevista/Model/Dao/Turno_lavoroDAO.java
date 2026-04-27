@@ -24,5 +24,6 @@ public interface Turno_lavoroDAO {
     public List<Turno_lavoro> findByIdDipTurno(Long id_dip_turno);
         public List<Turno_lavoro> findAllTurni(String cognome_turno);
         public List<Turno_lavoro> findAll();
+        public List<Turno_lavoro> findAllWithDipendente();
         public Turno_lavoro findByTurnoId(Long turno_id);
 }

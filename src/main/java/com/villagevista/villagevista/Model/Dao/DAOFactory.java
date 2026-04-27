@@ -1,14 +1,14 @@
 package com.villagevista.villagevista.Model.Dao;
 
 import com.villagevista.villagevista.Model.Dao.CookieImpl.CookieDAOFactory;
-import com.villagevista.villagevista.Model.Dao.mySQLJDBCImpl.MySQLJDBCDAOFactory;
+import com.villagevista.villagevista.Model.Dao.postgresJDBCImpl.PostgresJDBCDAOFactory;
 
 import java.util.Map;
 
 public abstract class DAOFactory {
 
     // List of DAO types supported by the factory
-    public static final String MYSQLJDBCIMPL = "MySQLJDBCImpl";
+    public static final String POSTGRESJDBCIMPL = "PostgresJDBCImpl";
     public static final String COOKIEIMPL= "com/villagevista/villagevista/Model";
 
     public abstract void beginTransaction();
@@ -26,8 +26,8 @@ public abstract class DAOFactory {
 
     public static DAOFactory getDAOFactory(String whichFactory,Map factoryParameters) {
 
-        if (whichFactory.equals(MYSQLJDBCIMPL)) {
-            return new MySQLJDBCDAOFactory(factoryParameters);
+        if (whichFactory.equals(POSTGRESJDBCIMPL)) {
+            return new PostgresJDBCDAOFactory(factoryParameters);
         } else if (whichFactory.equals(COOKIEIMPL)) {
             return new CookieDAOFactory(factoryParameters);
         } else {

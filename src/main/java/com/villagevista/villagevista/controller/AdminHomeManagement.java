@@ -1,6 +1,5 @@
 package com.villagevista.villagevista.controller;
 
-import com.mysql.cj.xdevapi.Client;
 import com.villagevista.villagevista.Model.Dao.*;
 import com.villagevista.villagevista.Model.Mo.*;
 import com.villagevista.villagevista.services.config.Configuration;
@@ -15,7 +14,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.villagevista.villagevista.Model.Dao.DAOFactory.MYSQLJDBCIMPL;
+import static com.villagevista.villagevista.Model.Dao.DAOFactory.POSTGRESJDBCIMPL;
 
 public class AdminHomeManagement {
     private AdminHomeManagement() {}
@@ -43,7 +42,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -68,6 +67,9 @@ public class AdminHomeManagement {
 
             List<Prenotazione> deletedprenotazioni = prenotazioneDAO.findCancellate();
             request.setAttribute("deletedprenotazioni", deletedprenotazioni);
+
+            List<Prenotazione> prenotazioniComplete = prenotazioneDAO.findAllWithCliente();
+            request.setAttribute("prenotazioniComplete", prenotazioniComplete);
 
             Turno_lavoroDAO turnoLavoroDAO = daoFactory.getTurno_lavoroDAO();
             if (turnoLavoroDAO == null) {
@@ -158,7 +160,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -248,7 +250,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -336,7 +338,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -431,7 +433,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -521,7 +523,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -592,7 +594,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -680,7 +682,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -785,7 +787,7 @@ public class AdminHomeManagement {
             daoFactory.beginTransaction();
 
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -851,7 +853,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -931,7 +933,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             if (daoFactory == null) {
@@ -1021,7 +1023,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -1109,7 +1111,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -1201,7 +1203,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -1299,7 +1301,7 @@ public class AdminHomeManagement {
             Turno_lavoroDAO turnoLavoroDAO = daoFactory.getTurno_lavoroDAO();
 
             // Chiamata al metodo per trovare tutti i turni di lavoro
-            List<Turno_lavoro> turni_lavoro = turnoLavoroDAO.findAll();
+            List<Turno_lavoro> turni_lavoro = turnoLavoroDAO.findAllWithDipendente();
 
             // Imposta gli attributi nella request per la JSP
             request.setAttribute("turniLavoro", turni_lavoro);
@@ -1358,7 +1360,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -1461,7 +1463,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -1566,7 +1568,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -1668,7 +1670,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -1760,7 +1762,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -1851,7 +1853,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -1942,7 +1944,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -2031,7 +2033,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -2115,7 +2117,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -2200,7 +2202,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -2304,7 +2306,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -2392,7 +2394,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -2478,7 +2480,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -2563,7 +2565,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -2661,7 +2663,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(DAOFactory.POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             DipendenteDAO dipendenteDAO = daoFactory.getDipendenteDAO();
@@ -2754,7 +2756,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             ClienteDAO clienteDAO = daoFactory.getClienteDAO();
@@ -2841,7 +2843,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             PrenotazioneDAO prenotazioneDAO = daoFactory.getPrenotazioneDAO();
@@ -2948,7 +2950,7 @@ public class AdminHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(DAOFactory.POSTGRESJDBCIMPL, sessionFactoryParameters);
             daoFactory.beginTransaction();
 
             DipendenteDAO dipendenteDAO = daoFactory.getDipendenteDAO();

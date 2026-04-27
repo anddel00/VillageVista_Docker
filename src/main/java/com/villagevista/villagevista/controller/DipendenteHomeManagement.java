@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.villagevista.villagevista.Model.Dao.DAOFactory.MYSQLJDBCIMPL;
+import static com.villagevista.villagevista.Model.Dao.DAOFactory.POSTGRESJDBCIMPL;
 
 public class DipendenteHomeManagement {
     private DipendenteHomeManagement() {
@@ -45,7 +45,7 @@ public class DipendenteHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");
@@ -121,7 +121,7 @@ public class DipendenteHomeManagement {
             daoFactory = DAOFactory.getDAOFactory(Configuration.DAO_IMPL, null);
             daoFactory.beginTransaction();
 
-            daoFactory = DAOFactory.getDAOFactory(MYSQLJDBCIMPL, sessionFactoryParameters);
+            daoFactory = DAOFactory.getDAOFactory(POSTGRESJDBCIMPL, sessionFactoryParameters);
 
             if (daoFactory == null) {
                 throw new RuntimeException("DAOFactory is null");

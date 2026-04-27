@@ -279,6 +279,13 @@
         .btn-action:hover { filter: brightness(0.9); }
         .btn-danger { background-color: var(--status-cancelled); }
         .btn-primary { background-color: var(--primary); }
+
+        /* --- 7. DATA TABLE PER DETTAGLIO PRENOTAZIONI --- */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        .data-table th, .data-table td { border-bottom: 1px solid #e2e8f0; padding: 12px 15px; text-align: left; }
+        .data-table th { background-color: var(--primary); color: white; font-weight: 600; text-transform: uppercase; font-size: 13px; letter-spacing: 0.5px; }
+        .data-table tr:hover { background-color: #f8fafc; }
+        .data-table tbody tr { transition: background-color 0.2s; }
         .btn-success { background-color: var(--status-confirmed); }
 
         #deleteforeverBtn {
@@ -550,6 +557,45 @@
                 <% } %>
                 <% } %>
             </div>
+        </div>
+    </div>
+
+    <div class="section" id="dettaglioPrenotazioniSection" style="display: block;">
+        <h1 class="table-title" style="color: var(--primary);">Dettaglio Prenotazioni (con Dati Cliente)</h1>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>N° Pren.</th>
+                        <th>Alloggio</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Nome Cliente</th>
+                        <th>Cognome</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% List<Prenotazione> prenotazioniComplete = (List<Prenotazione>) request.getAttribute("prenotazioniComplete");
+                       if (prenotazioniComplete != null && !prenotazioniComplete.isEmpty()) {
+                           for (Prenotazione p : prenotazioniComplete) { %>
+                    <tr>
+                        <td><%= p.getNumPrenotazione() %></td>
+                        <td><%= p.getAlloggio() %></td>
+                        <td><%= sdf.format(p.getDataCheckin()) %></td>
+                        <td><%= sdf.format(p.getDataCheckout()) %></td>
+                        <td><%= p.getCliente() != null && p.getCliente().getNome_cliente() != null ? p.getCliente().getNome_cliente() : "" %></td>
+                        <td><%= p.getCliente() != null && p.getCliente().getCognome_cliente() != null ? p.getCliente().getCognome_cliente() : p.getCognomeP() %></td>
+                        <td><%= p.getCliente() != null && p.getCliente().getEmail() != null ? p.getCliente().getEmail() : "" %></td>
+                        <td><%= p.getCliente() != null && p.getCliente().getTelefono() != null ? p.getCliente().getTelefono() : "" %></td>
+                    </tr>
+                    <%     }
+                       } else { %>
+                    <tr><td colspan="8" style="text-align:center;">Nessuna prenotazione trovata.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
         </div>
     </div>
 

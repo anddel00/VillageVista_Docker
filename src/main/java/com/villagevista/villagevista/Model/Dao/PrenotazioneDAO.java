@@ -33,6 +33,6 @@ public interface PrenotazioneDAO {
     public void deleteforever(Long num_prenotazione);
 
     public List<Prenotazione> findAll();
-
+    public List<Prenotazione> findAllWithCliente();
 
 }
