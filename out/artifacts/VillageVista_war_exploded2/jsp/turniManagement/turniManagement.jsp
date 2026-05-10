@@ -367,7 +367,7 @@
                     <div class="giorno"><%= dayNameFormat.format(Date.valueOf(turno.getData_turno().toLocalDate())) %></div>
 
                     <div class="turno-details">
-                        <p><span style="color: var(--text-muted);">Assegnato a:</span> <span class="cognome-turno"><%= turno.getCognome_turno() %></span></p>
+                        <p><span style="color: var(--text-muted);">Assegnato a:</span> <span class="cognome-turno"><%= (turno.getDipendente() != null && turno.getDipendente().getNome_dip() != null) ? turno.getDipendente().getNome_dip() + " " + turno.getDipendente().getCognome_dip() : turno.getCognome_turno() %></span></p>
                         <p><span style="color: var(--text-muted);">Orario:</span> <strong><%= turno.getOra_inizio() %> - <%= turno.getOra_fine() %></strong></p>
                     </div>
 
