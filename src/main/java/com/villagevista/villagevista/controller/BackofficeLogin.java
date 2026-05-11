@@ -120,8 +120,9 @@ public class BackofficeLogin {
                 request.setAttribute("viewUrl", "adminHome/adminHome");
 
 
-
-
+                List<Prenotazione> prenotazioniComplete = prenotazioneDAO.findAllWithCliente();
+                request.setAttribute("prenotazioniComplete", prenotazioniComplete);
+                
                 request.setAttribute("viewUrl", "adminHome/adminHome");
             } else {
                 request.setAttribute("applicationMessage", applicationMessage);
